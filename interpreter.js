@@ -134,6 +134,7 @@ TestRun.prototype.start = function(callback, webDriverToUse) {
   } else {
     this.wd = webdriver.remote(this.driverOptions);
     var testRun = this;
+    console.log(testRun);
     this.wd.init(this.browserOptions, function(err) {
       var info = { 'success': !err, 'error': err };
       if (err) {
@@ -280,7 +281,8 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
             // Only Selenium server errors have status property
             // Anything that doesn't have that won't throw IP, so we catch it here
             if (info.error.status == undefined) {
-              // This is the faulty test step, the javascript causes the error
+              // This is the faulty test step
+              // The javascript line in "script" causes the error (it selects a random undefined object)
               var serverFaultyStep = {
                 type: 'storeEval',
                 script: 'serverError = asa.asad.sa.das.das.d;',
