@@ -1,4 +1,4 @@
-se-interpreter (Addteq fork) [![Build Status](https://api.travis-ci.org/Addteq/se-interpreter.png)](http://travis-ci.org/Addteq/se-interpreter)
+se-interpreter (Addteq fork) 
 ==============
 
 This is a command-line tool for interpreting [Selenium Builder](http://www.sebuilder.com) JSON script files, based on [node](http://nodejs.org/) and the [wd](https://github.com/admc/wd) Javascript client driver for [Selenium 2](http://seleniumhq.org/). There is also a [Java-based counterpart](https://github.com/sebuilder/se-builder/wiki/Se-Interpreter).
