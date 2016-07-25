@@ -134,6 +134,7 @@ TestRun.prototype.start = function(callback, webDriverToUse) {
   } else {
     this.wd = webdriver.remote(this.driverOptions);
     var testRun = this;
+    console.log(testRun);
     this.wd.init(this.browserOptions, function(err) {
       var info = { 'success': !err, 'error': err };
       if (err) {
@@ -245,6 +246,11 @@ TestRun.prototype.end = function(callback) {
 
 TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defaultVars) {
   var testRun = this;
+
+  /** For server failure injection **/
+  currentScript = this.script;
+  currentTestRun = this;
+
   runCallback = runCallback || function() {};
   stepCallback = stepCallback || function() {};
   if (defaultVars) {
@@ -265,14 +271,39 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
       function runStep() {
         testRun.next(function(info) {
           stepCallback(info);
+
+          /* This part was modified to force Selenium Server to tell us what IP/Host it's running from ...
+            ... because we have multiple containers that might runt the test and need to know location 
+            It injects a test step that will cause a server error, throwing back the data we need.
+            This faulty step runs right after any type of failure, so we always know where something failed */
           if (info.error) {
-            testRun.end(function(endInfo) {
-              if (endInfo.error) {
-                info.additionalError = endInfo.error;
-              }
-              runCallback({'success': false, 'error': info.error});
-            });
-            return;
+
+            // Only Selenium server errors have status property
+            // Anything that doesn't have that won't throw IP, so we catch it here
+            if (info.error.status == undefined) {
+              // This is the faulty test step
+              // The javascript line in "script" causes the error (it selects a random undefined object)
+              var serverFaultyStep = {
+                type: 'storeEval',
+                script: 'serverError = asa.asad.sa.das.das.d;',
+                variable: ''
+              };
+
+              // Delete the remaining queue and insert our new faulty step
+              currentScript.steps = [serverFaultyStep];
+              currentTestRun.stepIndex = -1;
+            }
+
+            // If the error is the one we need, let it end the testrun and throw its output
+            else {
+              testRun.end(function(endInfo) {
+                if (endInfo.error) {
+                  info.additionalError = endInfo.error;
+                }
+                runCallback({'success': false, 'error': info.error});
+              });
+              return;
+            }
           }
           if (testRun.hasNext()) {
             runStep();
