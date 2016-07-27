@@ -34,6 +34,9 @@ var prefixes = {
       if (info.error) { callback(info); return; }
       var match = getter.cmp ? ("" + info.value) == testRun.p(getter.cmp) : info.value;
 
+      // Put the returned value from the remote javascript assertion into the testRun
+      testRun.receivedValue = info.value;
+
       if (testRun.currentStep().negated) {
         if (match) {
           callback({ 'success': false, 'error': new Error(getter.cmp ? getter.cmp + ' matches' : getter.name + ' is true') });
@@ -134,7 +137,7 @@ TestRun.prototype.start = function(callback, webDriverToUse) {
   } else {
     this.wd = webdriver.remote(this.driverOptions);
     var testRun = this;
-    console.log(testRun);
+
     this.wd.init(this.browserOptions, function(err) {
       var info = { 'success': !err, 'error': err };
       if (err) {
@@ -246,6 +249,9 @@ TestRun.prototype.end = function(callback) {
 
 TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defaultVars) {
   var testRun = this;
+  var failedStepTracked = false;      // Since we're generating a server error for every failed test
+                                      // we need to check that a failed step is being tracked properly
+                                      // instead of the generated faulty one which will give no useful info.
 
   /** For server failure injection **/
   currentScript = this.script;
@@ -289,6 +295,10 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
                 variable: ''
               };
 
+              // Insert this into the failed tests array we have later in the code
+              failedTests.push(testRun);
+              failedStepTracked = true;
+
               // Delete the remaining queue and insert our new faulty step
               currentScript.steps = [serverFaultyStep];
               currentTestRun.stepIndex = -1;
@@ -299,6 +309,10 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
               testRun.end(function(endInfo) {
                 if (endInfo.error) {
                   info.additionalError = endInfo.error;
+
+                  // Add to failed steps list if real failed step hasn't been found yet
+                  if (!failedStepTracked)
+                    failedTests.push(testRun)
                 }
                 runCallback({'success': false, 'error': info.error});
               });
@@ -888,6 +902,8 @@ if (numParallelRunners > 1 && !testRuns.every(function(tr) { return tr.quitDrive
   numParallelRunners = 1;
 }
 
+failedTests = []
+
 var index = -1;
 var successes = 0;
 var lastRunFinishedIndex = testRuns.length + numParallelRunners - 1;
@@ -903,6 +919,36 @@ function runNext() {
     testRuns[index].shareStateFromPrevTestRun ? testRuns[index - 1].vars : null);
   } else {
     if (index == lastRunFinishedIndex) { // We're the last runner to complete.
+
+      /*** Make a better report about the failures  ***/
+      if (failedTests.length > 0) {
+        console.log("\n----------------- FAILED TESTS -----------------\n");
+        
+        for (var i in failedTests) {
+          var stepIndex = failedTests[i].stepIndex;
+          var step = failedTests[i].script.steps[stepIndex];
+          
+          console.log(failedTests[i].name + " - Failed in step #" + stepIndex + ":");
+
+          console.log("   Step Type: " + step.type);
+          if (step.locator != undefined)
+            console.log("   Step Locator: " + step.locator.type + " - " + step.locator.value);
+          if (step.text != undefined)
+            console.log("   Text inserted: " + step.text);
+          if (step.script != undefined)
+            console.log("   Script executed: " + step.script);
+          if (step.variable != undefined)
+            console.log("   Variable used: " + step.variable);
+          if (step.value != undefined)
+            console.log("   Value expected:                " + step.value.green);
+          if (failedTests[i].receivedValue != undefined)
+            console.log("   Value received from Selenium:  " + failedTests[i].receivedValue.red);
+
+          console.log();
+        }
+      }
+
+
       var listener = listenerFactory();
       if (listener) {
         listener.endAllRuns(testRuns.length, successes);
