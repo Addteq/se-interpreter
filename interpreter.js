@@ -35,7 +35,7 @@ var prefixes = {
       var match = getter.cmp ? ("" + info.value) == testRun.p(getter.cmp) : info.value;
 
       // Put the returned value from the remote javascript assertion into the testRun
-      testRun.receivedValue = info.value;
+      testRun.script.receivedValue = info.value;
 
       if (testRun.currentStep().negated) {
         if (match) {
@@ -296,7 +296,10 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
               };
 
               // Insert this into the failed tests array we have later in the code
-              failedTests.push(testRun);
+              scriptFromFailedTest = JSON.parse(JSON.stringify(testRun.script))
+              failedTestRun = new TestRun(scriptFromFailedTest, testRun.name)
+              failedTestRun.stepIndex = testRun.stepIndex
+              failedTests.push(failedTestRun);
               failedStepTracked = true;
 
               // Delete the remaining queue and insert our new faulty step
@@ -311,8 +314,10 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
                   info.additionalError = endInfo.error;
 
                   // Add to failed steps list if real failed step hasn't been found yet
-                  if (!failedStepTracked)
+                  if (!failedStepTracked) {
                     failedTests.push(testRun)
+                    failedStepTracked = true
+                  }
                 }
                 runCallback({'success': false, 'error': info.error});
               });
@@ -930,6 +935,7 @@ function runNext() {
           
           console.log(failedTests[i].name + " - Failed in step #" + stepIndex + ":");
 
+          //console.log(failedTests[i])
           console.log("   Step Type: " + step.type);
           if (step.locator != undefined)
             console.log("   Step Locator: " + step.locator.type + " - " + step.locator.value);
@@ -941,8 +947,8 @@ function runNext() {
             console.log("   Variable used: " + step.variable);
           if (step.value != undefined)
             console.log("   Value expected:                " + step.value.green);
-          if (failedTests[i].receivedValue != undefined)
-            console.log("   Value received from Selenium:  " + failedTests[i].receivedValue.red);
+          if (failedTests[i].script.receivedValue != undefined)
+            console.log("   Value received from Selenium:  " + failedTests[i].script.receivedValue.red);
 
           console.log();
         }
