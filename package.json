@@ -34,5 +34,9 @@
     "string": "1.2.0",
     "wd": ">= 0.0.28"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+
+  "publishConfig" : {
+    "registry" : "https://nexus3.addteq.com/repository/addteq-npm/"
+  }
 }
