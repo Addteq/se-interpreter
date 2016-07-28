@@ -10,15 +10,15 @@
     "webdriver",
     "testing"
   ],
-  "version": "1.0.8'",
+  "version": "1.0.8",
   "homepage": "http://www.sebuilder.com/",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Zarkonnen/se-interpreter.git"
+    "url": "https://github.com/Addteq/se-interpreter.git"
   },
   "bugs": {
     "url": "https://github.com/Zarkonnen/se-interpreter/issues",
-    "email": "david.stark@zarkonnen.com"
+    "email": "roberto.yacupoma@addteq.com"
   },
   "main": "interpreter",
   "bin": "./interpreter.js",
