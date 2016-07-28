@@ -1,5 +1,8 @@
 {
   "author": "David Stark <david.stark@zarkonnen.com>",
+  "contributors": [
+    {"name": "Roberto Arias-Yacupoma", "email": "roberto.yacupoma@addteq.com"}
+  ],
   "name": "se-interpreter",
   "description": "Command-line interpreter for Selenium Builder test scripts.",
   "tags": [
@@ -7,7 +10,7 @@
     "webdriver",
     "testing"
   ],
-  "version": "1.0.8",
+  "version": "1.0.8'",
   "homepage": "http://www.sebuilder.com/",
   "repository": {
     "type": "git",
