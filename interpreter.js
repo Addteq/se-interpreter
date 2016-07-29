@@ -303,8 +303,8 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
               failedStepTracked = true;
 
               // Delete the remaining queue and insert our new faulty step
-              currentScript.steps = [serverFaultyStep];
-              currentTestRun.stepIndex = -1;
+              currentScript.steps = [serverFaultyStep, serverFaultyStep];
+              currentTestRun.stepIndex = 0;
             }
 
             // If the error is the one we need, let it end the testrun and throw its output
