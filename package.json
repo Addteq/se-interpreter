@@ -3,7 +3,7 @@
   "contributors": [
     {"name": "Roberto Arias-Yacupoma", "email": "roberto.yacupoma@addteq.com"}
   ],
-  "name": "se-interpreter",
+  "name": "@addteq/se-interpreter",
   "description": "Command-line interpreter for Selenium Builder test scripts.",
   "tags": [
     "selenium",
