@@ -529,7 +529,7 @@ function getInterpreterListener(testRun) {
     },
     'endTestRun': function(testRun, info) {
       if (info.success) {
-        console.log(testRun.name + ": " + "Test passed".green +("("+ testRun.browserOptions.browserName +") ").yellow);
+        //console.log(testRun.name + ": " + "Test passed".green +("("+ testRun.browserOptions.browserName +") ").yellow);
       } else {
         if (info.error) {
           console.log(testRun.name + ": " + "Test failed: ".red +("("+ testRun.browserOptions.browserName +") ").yellow + util.inspect(info.error));
@@ -929,6 +929,8 @@ function runNext() {
       if (failedTests.length > 0) {
         console.log("\n----------------- FAILED TESTS -----------------\n");
         
+        var listOfFailedTestsForRerun = ""
+
         for (var i in failedTests) {
           var stepIndex = failedTests[i].stepIndex;
           var step = failedTests[i].script.steps[stepIndex];
@@ -951,7 +953,12 @@ function runNext() {
             console.log("   Value received from Selenium:  " + failedTests[i].script.receivedValue.red);
 
           console.log();
+
+          listOfFailedTestsForRerun += failedTests[i].name + "\n"
         }
+
+        listOfFailedTestsForRerun = listOfFailedTestsForRerun.slice(0, -1)
+        fs.writeFileSync(".failedTestsForRerun", listOfFailedTestsForRerun)
       }
 
 
