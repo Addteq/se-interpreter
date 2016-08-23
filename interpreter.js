@@ -254,8 +254,8 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
                                       // instead of the generated faulty one which will give no useful info.
 
   /** For server failure injection **/
-  currentScript = this.script;
-  currentTestRun = this;
+  var currentScript = this.script;
+  var currentTestRun = this;
 
   runCallback = runCallback || function() {};
   stepCallback = stepCallback || function() {};
@@ -296,8 +296,8 @@ TestRun.prototype.run = function(runCallback, stepCallback, webDriverToUse, defa
               };
 
               // Insert this into the failed tests array we have later in the code
-              scriptFromFailedTest = JSON.parse(JSON.stringify(testRun.script))
-              failedTestRun = new TestRun(scriptFromFailedTest, testRun.name)
+              var scriptFromFailedTest = JSON.parse(JSON.stringify(testRun.script))
+              var failedTestRun = new TestRun(scriptFromFailedTest, testRun.name)
               failedTestRun.stepIndex = testRun.stepIndex
               failedTests.push(failedTestRun);
               failedStepTracked = true;
