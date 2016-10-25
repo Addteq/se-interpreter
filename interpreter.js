@@ -775,6 +775,10 @@ exports.parseScriptFile = parseScriptFile;
 exports.subEnvVars = subEnvVars;
 exports.loadData = loadData;
 
+
+/*** Export SE-Interpreter javascript API too ****/
+exports.seInterpreterAPI = require('./seInterpreter.js')
+
 // Command-line usage.
 if (require.main !== module) {
   return;
