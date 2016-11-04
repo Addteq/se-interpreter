@@ -1,23 +1,27 @@
+function init() {
+	return 	{
+		type: "script",
+		seleniumVersion: "2",
+		formatVersion: 2,
+		steps: [],
+		data: {
+			configs: {},
+			source: "none"
+		},
+		inputs: [],
+		timeoutSeconds: 30
+	}
+}
+
 module.exports = {
+
+	test: init(),
 
 	/**
 	Used only in constructor to initialize default values
 	Not exported for public usage in test creation
 	**/
-	init: function() {
-		return 	{
-			type: "script",
-			seleniumVersion: "2",
-			formatVersion: 2,
-			steps: [],
-			data: {
-				configs: {},
-				source: "none"
-			},
-			inputs: [],
-			timeoutSeconds: 30
-		};
-	},
+	init: init,
 
 	/**
 	Open the passed url (does a get request)
@@ -165,13 +169,31 @@ module.exports = {
 
 	@param selector 		Selector to identify the element
 	@param text 			Text to set in the element
-	@param selectorType 	Type of selector used. Default is "id"
+	@param selectorType 	(Optional) Type of selector used. Default is "id"
 	**/
 	setElementTextNoWait: function(selector, text, selectorType) {
 		var steps = [{
 			type: "setElementText",
 			locator: this._getLocator(selector, selectorType, "You forgot to specify what element to set the text in"),
 			text: String(text)
+		}]
+
+		this._addSteps(steps)
+		return steps
+	},
+
+	/**
+	Re-creates the pressing of a special key in an element, like spacebar or Enter key
+	
+	@param selector 		Selector to identify the elemtn
+	@param specialKey 		The key to send (in text, for instance spacebar is " ", and Enter is "\n")
+	@param selectorType 	(Optional) Type of selector used. Default is "id"
+	**/
+	pressSpecialKey: function(selector, specialKey, selectorType) {
+		var steps = [{
+			type: "sendKeysToElement",
+			locator: this._getLocator(selector, selectorType, "You forgot to specify what element to set the text in"),
+			text: String(specialKey)
 		}]
 
 		this._addSteps(steps)

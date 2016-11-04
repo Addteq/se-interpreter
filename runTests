@@ -1,0 +1,4 @@
+#!/bin/bash
+TEST_FILE=$1
+
+./node_modules/qunit-cli/bin/qunit-cli $TEST_FILE
