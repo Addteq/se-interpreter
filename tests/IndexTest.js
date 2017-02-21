@@ -55,7 +55,7 @@ Qunit.test("All steps defined in each function are correctly added to the list o
 		var returnedSteps = API[seleniumStepFunction]()
 
 		// Assert they return an array (which should be the array of steps)
-		assert.equal(Array.isArray(returnedSteps), true, `Function ${seleniiumStepFunction} did not return an array of steps`)
+		assert.equal(Array.isArray(returnedSteps), true, `Function ${seleniumStepFunction} did not return an array of steps`)
 
 		// Add the returned steps to all steps
 		allSteps = allSteps.concat(returnedSteps)
@@ -68,7 +68,7 @@ Qunit.test("All steps defined in each function are correctly added to the list o
 
 Qunit.test("Correctly exporting defined test to a file", function (assert) {
 	var fileName = '_testing.json_';
-	APIutils.toFile(fileName);
+	APIutils.toFile(API.test, fileName);
 
 	// This will throw an exception if it doesn't exist
 	var threwError = false;
