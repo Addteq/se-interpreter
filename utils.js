@@ -15,6 +15,15 @@ function setDefaultIfNullOrUndefined(variable, defaultValue) {
 
 module.exports = {
 
+
+	/**
+	This function will allow migrating the existing test cases to this framework
+	Add the passed steps to the end of the already defined ones
+	**/
+	addSteps: function(nextSteps) {
+		this.test.steps = this.test.steps.concat(nextSteps)
+	},
+
 	/**
 	Return the steps stored in this ETF instance. This will be the test that will run
 	**/
@@ -56,22 +65,13 @@ module.exports = {
 		return Math.floor(Math.random() * 100000001) + 1;
 	},
 
-	// This function will allow migrating the existing test cases to this framework
-	// Add the passed steps to the end of the already defined ones
-	/**
-
-	**/
-	addSteps: function(nextSteps) {
-		this.test.steps = this.test.steps.concat(nextSteps)
-	},
-
 	// Get the test ready into a separate json file
-	toFile: function(fileName) {
+	toFile: function(testJson, fileName) {
 		fileName = setDefaultIfNullOrUndefined(fileName, 'testingTest.json');
-		var data = jsonfile.writeFileSync(fileName, this.test, {spaces: 2});
+		var data = jsonfile.writeFileSync(fileName, testJson, {spaces: 2});
 	},
 
-	ETFException: function(message) {
+	SeInterpreterException: function(message) {
 		this.message = message;
 		this.name = "Excellentable-Testing-Framework Exception";
 	}

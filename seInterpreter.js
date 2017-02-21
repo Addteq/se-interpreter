@@ -18,6 +18,26 @@ module.exports = {
 	test: init(),
 
 	/**
+	Remove the steps loaded in this ETF instance
+	**/
+	clean: function() {
+		this.test.steps = []
+	},
+
+	/**
+	This function will allow migrating the existing test cases to this framework
+	Add the passed steps to the end of the already defined ones
+	**/
+	_addSteps: function(nextSteps) {
+		this.test.steps = this.test.steps.concat(nextSteps)
+	},
+
+	SeInterpreterException: function(message) {
+		this.message = message;
+		this.name = "SE-InterpreterAPI Exception";
+	},
+
+	/**
 	Used only in constructor to initialize default values
 	Not exported for public usage in test creation
 	**/
@@ -277,7 +297,7 @@ module.exports = {
 	**/
 	_getLocator: function(selector, selectorType, errorMsg) {
 		// If no selector passed, throw error
-		if (selector == undefined && !this.unitTestMode) throw new this._ETFException(errorMsg);
+		if (selector == undefined && !this.unitTestMode) throw new this.SeInterpreterException(errorMsg);
 
 		// Only set a default for selectorType, default: id
 		selectorType = this._setDefaultIfNullOrUndefined(selectorType, "id");
