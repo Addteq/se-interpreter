@@ -74,9 +74,18 @@ module.exports = {
 	},
 
 	/**
+	Append text to the body of an iframe in Safari
+	**/
+	addTextToIframeBody: function(text) {
+		return this.runScript(
+			`$("iframe").contents().find("body").append("${text}")`
+		)
+	},
+
+	/**
 	Switch to an iframe when working in Safari
 	**/
-	switchToIframeSAFARI: function() {
+	enableIframeSAFARI: function() {
 		return this.runScript(
 			`$("iframe").contents().find("body").click()`
 		)
@@ -232,6 +241,18 @@ module.exports = {
 			type: "pause",
 			waitTime: String(time)
 		}]
+		this._addSteps(steps)
+		return steps
+	},
+
+	/**
+	Refresh the page
+	**/
+	refresh: function() {
+    	var steps = [{
+        	type: "refresh"
+    	}]
+
 		this._addSteps(steps)
 		return steps
 	},
