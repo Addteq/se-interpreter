@@ -30,11 +30,11 @@
   },
   "dependencies": {
     "colors": "~0.6",
-    "glob": "3.1.16",
+    "glob": "5.0.15",
     "jsonfile": "^2.4.0",
     "optimist": "0.3.5",
     "sax": ">= 0.6.1",
-    "selenium-standalone": "^5.4.1",
+    "selenium-standalone": "^6.14.1",
     "string": "1.2.0",
     "wd": ">= 0.0.28",
     "yargs": "^6.3.0"
