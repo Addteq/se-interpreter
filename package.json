@@ -37,12 +37,18 @@
     "selenium-standalone": "^5.4.1",
     "string": "1.2.0",
     "wd": ">= 0.0.28",
-    "yargs": "^6.3.0"
+    "yargs": "^6.3.0",
+    "snyk": "^1.189.0"
   },
   "devDependencies": {
     "qunit-cli": "^0.2.0"
   },
   "publishConfig": {
     "registry": "https://nexus.addteq.com/content/repositories/addteq-npm/"
-  }
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
