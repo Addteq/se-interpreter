@@ -34,10 +34,10 @@
     "jsonfile": "^2.4.0",
     "optimist": "0.3.5",
     "sax": ">= 0.6.1",
-    "selenium-standalone": "^5.4.1",
+    "selenium-standalone": "^6.0.0",
     "string": "1.2.0",
     "wd": ">= 0.0.28",
-    "yargs": "^6.3.0"
+    "yargs": "^13.1.0"
   },
   "devDependencies": {
     "qunit-cli": "^0.2.0"
